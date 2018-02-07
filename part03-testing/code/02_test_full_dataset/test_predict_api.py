@@ -1,9 +1,9 @@
 # test_predict_api.py
 import json
-from path import Path
+from pathlib import Path
 from predict_api import app
 
-DATA_DIR = Path(__file__).abspath().dirname()
+DATA_DIR = Path(__file__).parents[0]
 
 def test_api():
     dataset_fname = DATA_DIR.joinpath('testdata_iris_v1.0.json')
@@ -18,7 +18,7 @@ def test_api():
             expected_status_code = test_case['expected_status_code']
             # Test client uses "query_string" instead of "params"
             response = client.get('/predict', query_string=features)
-            # Check that we got "200 OK" back.
+            # Check that we got the correct status code back.
             assert response.status_code == expected_status_code
             # response.data returns a byte array, convert to a dict.
             assert json.loads(response.data) == expected_response

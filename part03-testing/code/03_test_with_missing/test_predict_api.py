@@ -1,12 +1,12 @@
 # test_predict_api.py
 import json
 import pytest
-from path import Path
+from pathlib import Path
 from predict_api import app
 
 # Find the directory where this script is.
 # **ASSUMES THAT THE TEST DATASET FILES ARE HERE.
-DATA_DIR = Path(__file__).abspath().dirname()
+DATA_DIR = Path(__file__).parents[0]
 
 @pytest.mark.parametrize('filename',
                          ['testdata_iris_v1.0.json',
@@ -24,7 +24,7 @@ def test_api_from_file(filename):
             expected_status_code = test_case['expected_status_code']
             # Test client uses "query_string" instead of "params"
             response = client.get('/predict', query_string=features)
-            # Check that we got "200 OK" back.
+            # Check that we got expected status code back.
             assert response.status_code == expected_status_code
             # response.data returns a byte array, convert to a dict.
             assert json.loads(response.data) == expected_response
